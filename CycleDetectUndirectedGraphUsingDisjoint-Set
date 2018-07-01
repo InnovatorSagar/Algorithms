@@ -1,0 +1,79 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+class Graph{public:
+	int v;
+	vector<pair<int,pair<int,int>>> edges;
+	vector<int> parent;
+	int index;
+	vector<int> size;
+	Graph(int ve)
+	{
+		v= ve;
+		size.resize(ve);
+		fill(size.begin(),size.end(),1);
+		parent.resize(ve);
+		fill(parent.begin(),parent.end(),-1);
+	             index=0;
+	}
+	//memset(parent,-1,sizeof(vertices));
+	void addEdge(int s, int u)
+	{
+		edges.push_back(make_pair(index++,make_pair(s,u)));
+	}
+	int root(int i)
+	{
+		while(parent[i]!=-1)
+		i = parent[i];
+		return i;
+	}
+	void Union(int ,int );
+	
+	bool detectCycle()
+	{
+		for(int i=0;i<edges.size();i++)
+		{
+			int u = edges[i].second.first;
+			int v = edges[i].second.second;
+			if(root(u)!=root(v))
+			Union(u,v);
+			else
+			return true;
+		}
+		return false;
+	}
+};
+
+void Graph::Union(int u,int v)
+{
+		int roota = root(u);
+		int rootb = root(v);
+		if(roota==rootb)
+		return;
+		else{
+			if(size[roota]>=size[rootb])
+			{
+				size[roota]+=size[rootb];
+				size[rootb]=0;
+				parent[rootb]=roota;
+			}
+			else{
+				size[rootb]+=size[roota];
+				size[roota]=0;
+				parent[roota]=rootb;
+			}
+		}
+	}
+
+int main() {
+	// your code goes here
+	Graph g(3);
+	g.addEdge(0,1);
+	g.addEdge(0,2);
+	g.addEdge(1,2);
+	if(g.detectCycle())
+	cout<<"Graph contains cycle";
+	else cout<<"Graph doesn't contains cycle";
+	
+	return 0;
+}

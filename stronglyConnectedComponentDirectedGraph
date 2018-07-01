@@ -1,0 +1,85 @@
+#include<bits/stdc++.h>
+using namespace std;
+class Graph{
+	public:
+	int v;
+	vector<int> *adj;
+	vector<bool> visited;
+	stack<int> st;
+	Graph(int v)
+	{
+		this->v=v;
+		visited.resize(v);
+		fill(visited.begin(),visited.end(),false);
+		adj = new vector<int>[v];
+	}
+	
+	void addEdge(int s,int v)
+	{
+		adj[s].push_back(v);
+	}
+	
+	void DFS(int s)
+	{
+	   visited[s]=true;
+	   for(int i=0;i<adj[s].size();i++)
+	   if(!visited[adj[s][i]])
+	   DFS(adj[s][i]);
+	   st.push(s);
+	}
+	
+	void DFSu(int s)
+	{cout<<s<<" ";
+	   visited[s]=true;
+	   for(int i=0;i<adj[s].size();i++)
+	   if(!visited[adj[s][i]])
+	   DFSu(adj[s][i]);
+	}
+	
+	Graph transpose()
+	{
+		Graph gr(v);
+		for(int i=0;i<v;i++)
+		for(int j=0;j<adj[i].size();j++)
+		gr.addEdge(adj[i][j],i);
+		return gr;
+	}
+	
+	void StronglyConnected(){
+		for(int i=0;i<v;i++)
+		if(!visited[i])
+		DFS(i);
+		stack<int> ht = st;
+		Graph gr = this->transpose();
+		while(!st.empty())
+		{
+			int t = st.top();
+			st.pop();
+			if(!gr.visited[t])
+			{
+				gr.DFSu(t);
+				cout<<endl;
+			}
+		}
+	}
+};
+int main(){
+	// Create a graph given in the above diagram
+    Graph g(5);
+    g.addEdge(1, 0);
+    g.addEdge(0, 2);
+    g.addEdge(2, 1);
+    g.addEdge(0, 3);
+    g.addEdge(3, 4);
+ 
+    cout << "Following are strongly connected components in "
+            "given graph \n";
+    g.StronglyConnected();
+}
+
+**OUTPUT**
+
+Following are strongly connected components in given graph 
+0 1 2 
+3 
+4 

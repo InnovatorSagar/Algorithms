@@ -1,0 +1,112 @@
+#include<bits/stdc++.h>
+using namespace std;
+class Graph{
+	public:
+	int v;
+	vector<int> *adj;
+	vector<bool> visited;
+	stack<int> st;
+	vector<int> in;
+	Graph(int v)
+	{
+		this->v=v;
+		visited.resize(v);
+		fill(visited.begin(),visited.end(),false);
+		in.resize(v);
+		fill(in.begin(),in.end(),0);
+		adj = new vector<int>[v];
+	}
+	
+	void addEdge(int s,int v)
+	{
+		adj[s].push_back(v);
+		in[v]++;
+	}
+	
+	void DFS(int s)
+	{
+	   visited[s]=true;
+	   for(int i=0;i<adj[s].size();i++)
+	   if(!visited[adj[s][i]])
+	   DFS(adj[s][i]);
+	   st.push(s);
+	}
+	
+	void DFSu(int s)
+	{//cout<<s<<" ";
+	   visited[s]=true;
+	   for(int i=0;i<adj[s].size();i++)
+	   if(!visited[adj[s][i]])
+	   DFSu(adj[s][i]);
+	}
+	
+	Graph transpose()
+	{
+		Graph gr(v);
+		for(int i=0;i<v;i++)
+		for(int j=0;j<adj[i].size();j++)
+		gr.addEdge(adj[i][j],i);
+		return gr;
+	}
+	
+	bool StronglyConnected(){
+		int i;
+		for(i=0;i<v;i++)
+		if(adj[i].size()>0)
+		break;
+		
+		if(i==v)
+		return true;
+		
+		DFS(i);
+		
+		for(int i=0;i<v;i++)
+		if(!visited[i]&&adj[i].size()>0)
+		return false;
+		
+		Graph gr = this->transpose();
+		
+		for(i=0;i<v;i++)
+		if(gr.adj[i].size()>0)
+		break;
+		
+		gr.DFSu(i);
+		
+		for(int i=0;i<v;i++)
+		if(!gr.visited[i]&&gr.adj[i].size()>0)
+		return false;
+		
+		return true;
+	}
+	
+	bool isEulerPath(){
+		if(StronglyConnected()==false)
+		return false;
+		
+		for(int i=0;i<v;i++)
+		if(adj[i].size()!=in[i])
+		return false;
+		
+		return true;
+	}
+};
+int main(){
+	// Create a graph given in the above diagram
+    Graph g(5);
+    g.addEdge(1, 0);
+    g.addEdge(0, 2);
+    g.addEdge(2, 1);
+    g.addEdge(0, 3);
+    g.addEdge(3, 4);
+    g.addEdge(4, 0);
+ 
+    if (g.isEulerPath())
+       cout << "Given directed graph is eulerian \n";
+    else
+       cout << "Given directed graph is NOT eulerian \n";
+    return 0;
+}
+
+**OUTPUT**
+
+Given directed graph is eulerian 

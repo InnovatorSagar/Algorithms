@@ -1,0 +1,57 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class Graph{
+	public:
+	int v;
+	vector<int> *adj;
+            vector<string> color;
+            Graph(int ve)
+	{
+		v = ve;
+		adj = new vector<int>[ve];
+		color.resize(ve);
+		fill(color.begin(),color.end(),"WHITE");
+	}
+	void addEdge(int u,int v)
+	{
+		adj[u].push_back(v);
+	}
+	bool isCyclicUntil(int s)
+	{
+	//	visited[s]=true;
+		color[s]="GREY";
+		for(int i=0;i<adj[s].size();i++)
+		{
+			if(color[adj[s][i]]=="GREY")
+			return true;
+			if(color[adj[s][i]]=="BLACK")
+			continue;
+			if(isCyclicUntil(adj[s][i]))
+			return true;
+		}
+		color[s]="BLACK";
+		return false;
+	}
+	
+	bool isCyclic()
+	{
+	     for(int i=0;i<v;i++)
+	     if(color[i]=="WHITE")
+	     {
+	     	if(isCyclicUntil(i))
+	     	return true;
+	     }
+	     return false;
+	}
+};
+int main(){
+	Graph g(3);
+	g.addEdge(0,1);
+	g.addEdge(1,2);
+	g.addEdge(2,0);
+	if(g.isCyclic())
+	cout<<"Graph contains cycle";
+	else cout<<"Graph doesn't contains  cycle";
+	
+}

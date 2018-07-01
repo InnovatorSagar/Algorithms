@@ -1,0 +1,56 @@
+#include<bits/stdc++.h>
+using namespace std;
+class Graph{
+	public:
+	int v;
+	vector<pair<int,pair<int,int>>> Edge;
+	vector<int> distance;
+	Graph(int ve)
+	{
+		distance.resize(ve);
+		fill(distance.begin(),distance.end(),INT_MAX);
+		v = ve;
+	}
+	void addEdge(int s, int v,int wt)
+	{
+		Edge.push_back(make_pair(wt,make_pair(s,v)));
+	}
+	void bellmanFord(int s)
+	{
+		distance[s]=0;
+		for(int i = 0;i<v-1;i++)
+		for(int j=0;j<Edge.size();j++)
+		{
+		      int wt = Edge[j].first;
+		      int u = Edge[j].second.first;
+		      int v = Edge[j].second.second;
+		      if(distance[u]!=INT_MAX&&distance[v]>distance[u]+wt)
+		      distance[v]=distance[u]+wt;
+		}
+	}
+};
+int main(){
+        Graph g(5);
+        g.addEdge(0, 1, -1);
+        g.addEdge(0, 2, 4);
+        g.addEdge(1, 2, 3);
+        g.addEdge(1, 3, 2);
+        g.addEdge(1, 4, 2);
+        g.addEdge(3, 2, 5);
+        g.addEdge(3, 1, 1);
+        g.addEdge(4, 3, -3);
+      
+        
+        g.bellmanFord(0);
+     
+        for(int i=0;i<5;i++)
+cout<<i<<" "<<g.distance[i]<<endl;
+}
+
+**OUTPUT**
+
+0 0
+1 -1
+2 2
+3 -2
+4 1

@@ -1,0 +1,116 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class Graph{
+	public:
+	int v;
+	vector<int> *adj;
+	vector<int> lowTime;
+	vector<int> visitedTime;
+	vector<int> parent;
+	vector<bool> visited;
+	vector<int> articulationPoints;
+	int time=0;
+	Graph(int ve)
+	{
+	   	 v = ve;
+	   	adj = new vector<int>[ve];
+	   	
+	   	lowTime.resize(v);
+	   	visitedTime.resize(v);
+	   	parent.resize(v);
+	   	visited.resize(v);
+	   	
+	   	fill(lowTime.begin(),lowTime.end(),0);
+	   	fill(visitedTime.begin(),visitedTime.end(),0);
+	   	fill(parent.begin(),parent.end(),-1);
+	   	fill(visited.begin(),visited.end(),false);
+	}
+	
+	void addEdge(int u,int v)
+	{
+		adj[u].push_back(v);
+		adj[v].push_back(u);
+	}
+	
+	void findArticulationPointsUntil(int s)
+	{	int child=0;
+	//cout<<"Arrived "<<s<<endl;
+		visited[s]=true;
+		bool articulation=false;
+		lowTime[s]=time;
+		visitedTime[s]=time;
+		time++;
+		for(int i=0;i<adj[s].size();i++)
+		{	if(adj[s][i]==parent[s])
+			continue;
+			if(!visited[adj[s][i]])
+			{           parent[adj[s][i]]=s;
+			            child++;
+				findArticulationPointsUntil(adj[s][i]);
+				if(visitedTime[s]<=lowTime[adj[s][i]])
+				articulation=true;
+				else lowTime[s] = min(lowTime[adj[s][i]],lowTime[s]);
+			}
+			else
+			{
+				lowTime[s] = min(visitedTime[adj[s][i]],lowTime[s]);
+			}
+		}
+		if((parent[s]==-1&&child>=2)||(parent[s]!=-1&&articulation))
+		articulationPoints.push_back(s);
+	}
+	void findArticulationPoints(){
+	
+		
+		for(int i=0;i<v;i++)
+		{if(!visited[i])
+		   {findArticulationPointsUntil(i);}
+		}
+		
+		for(int i=0;i<articulationPoints.size();i++)
+		cout<<articulationPoints[i]<<" ";
+		
+	}
+};
+
+int main(){
+	 cout << "\nArticulation points in first graph \n";
+    Graph g1(5);
+    g1.addEdge(1, 0);
+    g1.addEdge(0, 2);
+    g1.addEdge(2, 1);
+    g1.addEdge(0, 3);
+    g1.addEdge(3, 4);
+    g1.findArticulationPoints();
+  
+    cout << "\nArticulation points in second graph \n";
+    Graph g2(4);
+    g2.addEdge(0, 1);
+    g2.addEdge(1, 2);
+    g2.addEdge(2, 3);
+    g2.findArticulationPoints();
+ 
+    cout << "\nArticulation points in third graph \n";
+    Graph g3(7);
+    g3.addEdge(0, 1);
+    g3.addEdge(1, 2);
+    g3.addEdge(2, 0);
+    g3.addEdge(1, 3);
+    g3.addEdge(1, 4);
+    g3.addEdge(1, 6);
+    g3.addEdge(3, 5);
+    g3.addEdge(4, 5);
+    g3.findArticulationPoints();
+ 
+    return 0;
+}
+
+**OUTPUT**
+
+Articulation points in first graph 
+3 0 
+Articulation points in second graph 
+2 1 
+Articulation points in third graph 
+1 

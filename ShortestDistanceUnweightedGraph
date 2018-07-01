@@ -1,0 +1,72 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class Graph{
+	public:
+	int v;
+	vector<int> *adj;
+	vector<int> distance;
+	vector<int> path;
+	Graph(int ver)
+	{
+	v=ver;
+	adj= new vector<int>[ver];
+	distance.resize(ver);
+	fill(distance.begin(),distance.end(),-1);
+	path.resize(ver);
+	fill(path.begin(),path.end(),-1);
+	}
+	
+	void addEdge(int s, int v)
+	{
+		adj[s].push_back(v);
+		adj[v].push_back(s);
+	}
+	
+	void ShortestDistanceBFS(int s)
+	{
+		queue<int> q;
+		q.push(s);
+		distance[s]=0;
+		while(!q.empty())
+		{
+		    int t = q.front();
+		    q.pop();
+		    for(int i=0;i<adj[t].size();i++)
+		    if(distance[adj[t][i]]==-1)
+		    {
+		    	distance[adj[t][i]] = distance[t]+1;
+		    	path[adj[t][i]] = t;
+		    	q.push(adj[t][i]);
+		    }
+		}
+		
+	}
+};
+
+int main(){
+	Graph g(8);
+    g.addEdge(0, 1);
+    g.addEdge(0, 3);
+    g.addEdge(1, 2);
+    g.addEdge(3, 4);
+    g.addEdge(3, 7);
+    g.addEdge(4, 5);
+    g.addEdge(4, 6);
+    g.addEdge(4, 7);
+    g.addEdge(5, 6);
+    g.addEdge(6, 7);
+    g.ShortestDistanceBFS(0);
+    //Distance of each vertex from provided source //In this case : 0
+    for(int i=0;i<8;i++)
+    cout<<i<<" "<<g.distance[i]<<" "<<endl;
+    cout<<"Path to reach 7"<<endl;//For question where destination is provided and shortest path is asked
+    int dest = 7;
+    cout<<dest<<" ";
+    while(g.path[dest]!=-1)
+    {
+    	cout<<g.path[dest]<<" ";
+    	dest = g.path[dest];
+    }
+   
+}

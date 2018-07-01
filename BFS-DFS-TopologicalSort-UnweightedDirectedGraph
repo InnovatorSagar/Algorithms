@@ -1,0 +1,124 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+class Graph{
+public:
+    int v;
+    vector<int> *adj;
+    vector<bool> visited;
+    vector<int> indegree;
+    Graph(int ver)
+    {
+        v= ver;
+        visited.resize(ver);
+        fill(visited.begin(),visited.end(),false);
+        adj = new vector<int>[ver];
+        indegree.resize(ver);
+        fill(indegree.begin(),indegree.end(),0);
+    } 
+    void addEdge(int s,int d)
+    {
+    	adj[s].push_back(d);
+    //	adj[d].push_back(s);
+            indegree[d]++;
+    }
+    void DFS(int s)
+    {
+         visited[s]=true;
+         cout<<s<<"  ";
+         for(int i=0;i<adj[s].size();i++)
+         {
+         	if(!visited[adj[s][i]])
+         	DFS(adj[s][i]);
+         }
+    }
+    void BFS(int s)
+    {
+    	queue<int> q;
+    	q.push(s);
+    	while(!q.empty())
+    	{
+    		int t= q.front();
+    		q.pop();
+    		visited[t]=true;
+    		cout<<t<<" ";
+    		for(int i=0;i<adj[t].size();i++)
+    		if(!visited[adj[t][i]])
+    		{visited[adj[t][i]]=true;
+    		q.push(adj[t][i]);}
+    	}
+    }
+   
+    void TSDFS(){
+    	stack<int> s;
+    	for(int i=0;i<v;i++)
+    	{
+    		if(!visited[i])
+    		Tsort(i,s);
+    	}
+    	while(!s.empty())
+    	{
+    		cout<<s.top()<<" ";
+    		s.pop();
+    	}
+    }
+     void Tsort(int s,stack<int>& st)
+    {
+         visited[s]=true;
+         for(int i=0;i<adj[s].size();i++)
+         {
+         	if(!visited[adj[s][i]])
+         	Tsort(adj[s][i],st);
+         }
+         st.push(s);
+    }
+    void TSBFS()
+    {//fill(indegree.begin(),indegree.end(),0);
+    for(int i=0;i<v;i++)
+    cout<<i<<" "<<indegree[i]<<endl;
+    
+        queue<int> q;
+        for(int i=0;i<v;i++)
+        if(indegree[i]==0)
+        {cout<<i<<" "<<endl;
+        q.push(i);
+        }
+        while(!q.empty())
+        {
+        	int t = q.front();
+        	cout<<t<<" ";
+        	q.pop();
+        	for(int i=0;i<adj[t].size();i++)
+        	if(--indegree[adj[t][i]]==0)
+        	q.push(adj[t][i]);
+ 
+        }
+    }
+    
+    void FindShortest(int s)
+    {
+    	
+    }
+};
+ 
+ int main(){
+     Graph g(6);
+    g.addEdge(5, 2);
+    g.addEdge(5, 0);
+    g.addEdge(4, 0);
+    g.addEdge(4, 1);
+    g.addEdge(2, 3);
+    g.addEdge(3, 1);
+ 
+    //cout << "Following is Depth First Traversal"
+    //        " (starting from vertex 2) \n";
+    //g.DFS(2);
+    //g.BFS(2);
+     g.TSDFS();
+     cout<<endl;//Topological sorting using DFS
+     g.TSBFS();
+     g.FindShortest(0);
+    
+ 
+    return 0;
+ }

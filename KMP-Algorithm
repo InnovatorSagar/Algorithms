@@ -1,0 +1,60 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+vector<int> prefix(string p)
+{
+	int m = p.size();
+	vector<int> result(m,0);
+	int i=1,j=0;
+	while(i<m)
+	{
+		if(p[i]==p[j])
+		{
+			result[i] = j+1;
+			j++;
+			i++;
+		}
+		else if(j>0)
+		j = result[j-1];
+		else i++;
+	}
+	return result;
+}
+
+int stringMatch(string t, string p)
+{
+	vector<int> prefixArray = prefix(p);
+	
+	int i=0,j=0;
+	
+	while(i<t.size())
+	{
+		if(t[i]==p[j])
+		{
+			if(j==p.size()-1)
+			return i-j;
+			else
+			{i++;
+			j++;}
+		}
+		else if(j>0)
+		{
+			j = prefixArray[j-1];
+		}
+		else i++;
+	}
+	return -1;
+}
+
+int main() {
+	// your code goes here
+	string pattern = "abcdabcy";
+	string String = "abcdabcabcdabdabcyoureabcdeabcdabcy";
+	int res = stringMatch(String,pattern);
+	cout<<"The pattern starts at: "<<res<<endl;//Output the index at which string starts
+	return 0;
+}
+
+**OUTPUT**
+
+The pattern starts at: 27

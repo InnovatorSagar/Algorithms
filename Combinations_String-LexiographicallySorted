@@ -1,0 +1,66 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+void print(vector<char> s,int len)
+{
+	for(int i=0;i<len;i++)
+	cout<<s[i];
+	cout<<endl;
+}
+
+void printPermute(vector<int> &count,vector<char> &alpha,vector<char> & result,int level,int start)
+{    print(result,level);
+	for(int i=start;i<alpha.size();i++)
+	{
+		if(count[i]==0)
+		continue;
+		else{
+			count[i]--;
+			result[level]=alpha[i];
+			printPermute(count,alpha,result,level+1,i);
+			count[i]++;
+		}
+		
+	}
+}
+
+void permute(string s)
+{
+	map<char,int> map;
+	for(int i=0;i<s.size();i++)
+	map[s[i]]++;
+	
+	vector<char> alpha;
+	vector<int> count;
+	
+	for(auto itr=map.begin();itr!=map.end();itr++)
+	{
+	    alpha.push_back(itr->first);
+	    count.push_back(itr->second);
+	}
+	
+	vector<char> result(s.size());
+	printPermute(count,alpha,result,0,0);
+}
+
+
+int main() {
+	// your code goes here
+	string s="AABC";
+	permute(s);
+	return 0;
+}
+
+**OUTPUT**
+
+A
+AA
+AAB
+AABC
+AAC
+AB
+ABC
+AC
+B
+BC
+C

@@ -91,13 +91,14 @@ int main(){
             insert(root,S[i]);
             
             string toSearch[]={"Sagar","Amit","heri","Dab"};
-            
+            cout<<"********SEARCHING*********"<<endl;
             for(int i=0;i<4;i++)
             if(search(root,toSearch[i]))
             cout<<toSearch[i]<<" found."<<endl;
             else cout<<toSearch[i]<<" not found."<<endl;
             
             string toDelt[] = {"Sagar","hero","NewYork","aman"};
+            cout<<"********DELETION*********"<<endl;
             
             for(int i=0;i<4;i++)
             if(Delete(root,toDelt[i]))
@@ -106,3 +107,16 @@ int main(){
      
      
 }
+
+**OUTPUT** 
+
+********SEARCHING*********
+Sagar found.
+Amit not found.
+heri not found.
+Dab not found.
+********DELETION*********
+Sagar deleted.
+hero deleted.
+NewYork deleted.
+aman deleted.

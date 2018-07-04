@@ -1,0 +1,108 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct Trie{
+	unordered_map<char,Trie*> map;
+	bool is_end;
+};
+
+Trie* createNode(){
+	Trie* n = new Trie;
+	n->is_end=false;
+	return n;
+}
+
+void insert(Trie*&root, string s)
+{
+	if(!root)
+	root=createNode();
+	
+	Trie * temp = root;
+	for(int i=0;i<s.size();i++)
+	{
+		char ch = s[i];
+		if(temp->map.find(ch)==temp->map.end())
+		temp->map[ch] = createNode();
+		temp=temp->map[ch];
+	}
+	temp->is_end=true;
+}
+
+bool search(Trie*&root,string s)
+{
+	if(!root)
+	return false;
+	
+	Trie*temp = root;
+	
+	for(int i=0;i<s.size();i++)
+	{
+		char ch = s[i];
+		if(temp->map.find(ch)==temp->map.end())
+		return false;
+		temp=temp->map[ch];
+	}
+	return temp->is_end;
+}
+
+bool del(Trie *& root,string s,int index)
+{// cout<<"Seeing "<<s[index]<<endl;
+
+	if(index==s.size())
+	{
+		if(!root->is_end)
+		return false;
+		
+		root->is_end=false;
+		
+		return root->map.size()==0;
+	}
+	
+	char ch = s[index];
+	Trie *node;
+	if(root->map.find(ch)==root->map.end())
+	return false;
+	else node = root->map[ch];
+	bool sd = del(node,s,index+1);
+	if(sd)
+	{
+	      root->map.erase(ch);
+	      int h= root->map.size();
+	      if(index==0)
+	      return true;
+	      return root->map.size()==0;
+	}
+	return false;
+}
+
+bool Delete(Trie*&root,string s)
+{
+	return del(root,s,0);
+}
+
+
+
+int main(){
+	Trie*root = createNode();
+            
+            string S[]={"NewYork","Sagar","hero","aman"};
+            
+            for(int i=0;i<4;i++)
+            insert(root,S[i]);
+            
+            string toSearch[]={"Sagar","Amit","heri","Dab"};
+            
+            for(int i=0;i<4;i++)
+            if(search(root,toSearch[i]))
+            cout<<toSearch[i]<<" found."<<endl;
+            else cout<<toSearch[i]<<" not found."<<endl;
+            
+            string toDelt[] = {"Sagar","hero","NewYork","aman"};
+            
+            for(int i=0;i<4;i++)
+            if(Delete(root,toDelt[i]))
+            cout<<toDelt[i]<<" deleted."<<endl;
+            else cout<<toDelt[i]<<" not deleted."<<endl;
+     
+     
+}

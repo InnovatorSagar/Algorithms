@@ -1,0 +1,52 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+void printString(string s,int i,int k)
+{
+	cout<<"Longest palindromic substring is : "<<s.substr(i,k)<<endl;
+}
+
+int longestPalindromicSubstring(string s)
+{
+	int n = s.size();
+	
+	bool table[n][n];
+	memset(table,false,sizeof(table));
+	int maxLength=1;
+	for(int i=0;i<n;i++)
+	table[i][i]=true;
+	int start=0;
+	for(int i=0;i<n-1;i++)
+	if(s[i]==s[i+1])
+	{maxLength=2;
+	table[i][i+1]=true;
+	start=i;
+	}
+	
+	for(int k=3;k<=n;k++)
+	{
+		for(int i=0;i<n-k+1;i++)
+		{
+		     int j= i+k-1;
+		     if(table[i+1][j-1]&&s[i]==s[j])
+		     {  table[i][j]=true;
+		     	maxLength = max(k,maxLength);
+		     	start = i;
+		     }
+		}
+	}
+	printString(s,start,maxLength);
+	return maxLength;
+}
+
+int main() {
+	// your code goes here
+    string s="abcaaaacba";
+    cout<<"Length : "<<longestPalindromicSubstring(s)<<endl;
+	return 0;
+}
+
+**OUTPUT**
+
+Longest palindromic substring is : abcaaaacba
+Length : 10

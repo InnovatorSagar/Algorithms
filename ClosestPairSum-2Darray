@@ -1,0 +1,85 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct Point{
+	int x,y;
+};
+
+int compareY(const void*a,const void*b)
+{
+	Point*p1=(Point*)a,*p2=(Point*)b;
+	return (p1->y-p2->y);
+}
+
+int compareX(const void*a,const void*b)
+{
+	Point*p1=(Point*)a,*p2=(Point*)b;
+	return (p1->x-p2->x);
+}
+
+float dist(Point p,Point r)
+{
+	return sqrt((p.x-r.x)*(p.x-r.x)+(p.y-r.y)*(p.y-r.y));
+}
+
+float BruteForce(Point p[],int n)
+{float mindist = FLT_MAX;
+	for(int i=0;i<n;i++)
+	{
+		for(int j=i+1;j<n;j++)
+		{
+			if(dist(p[i],p[j])<mindist)
+			mindist=dist(p[i],p[j]);
+		}
+	}
+	return mindist;
+}
+
+float ClosestPath(Point strip[],int size,float d)
+{qsort(strip,size,sizeof(Point),compareY);
+	float mindist = d;
+	for(int i=0;i<size;i++)
+	for(int j=i+1;j<size&&(strip[j].y-strip[i].y)<mindist;j++)
+	if(dist(strip[i],strip[j])<mindist)
+	mindist = dist(strip[i],strip[j]);
+	
+	return mindist;
+}
+
+float minDistance(Point p[],int n)
+{
+	if(n<=3)
+	{
+		return BruteForce(p,n);
+	}
+	
+	int mid = n/2;
+	Point midPoint = p[mid];
+	float dl = minDistance(p,mid);
+	float dr = minDistance(p+mid,n-mid);
+	
+	float d = min(dl,dr);
+	
+	Point strip[n];
+	
+	int j=0;
+	for(int i=0;i<n;i++)
+	if(abs(p[i].x-midPoint.x)<d)
+	{strip[j] = p[i];j++;}
+	
+	return min(d,ClosestPath(strip,j,d));
+}
+
+int main() {
+	// your code goes here
+	 Point P[] = {{2, 3}, {12, 30}, {40, 50}, {5, 1}, {12, 10}, {3, 4}};
+	 int n = sizeof(P) / sizeof(P[0]);
+	 qsort(P,n,sizeof(Point),compareX);
+	cout<<"The closest pair distance is : "<<minDistance(P,n);
+	
+	return 0;
+}
+
+**OUTPUT**
+
+The closest pair distance is : 1.41421

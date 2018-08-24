@@ -1,0 +1,75 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+string newString(string s)
+{
+	string str = "$";
+	for(int i=0;i<s.size();i++)
+	{
+		str += '#';
+		str += (char)s[i];
+	}
+	
+	str+="#@";
+	return str;
+}
+
+string LongestPalindrome(string str)
+{	string s = str;
+	str = newString(str);
+	int len = str.length();
+	int c=0,r=0;
+	int P[len]={0};
+	
+	for(int i=1;i<len-1;i++)
+	{
+		int mirr = 2*c -i;
+		
+		if(i<r)
+		P[i] = min(r-i,P[mirr]);
+		
+		while(str[i+P[i]]==str[i-P[i]])
+		P[i]++;
+		
+		if(i+P[i]>r)
+		{
+			c=i;
+			r = i+P[i];
+		}
+	}
+	
+	int maxi = 0;
+	int i=0;
+	
+	for(int j=1;j<len-1;j++)
+	{
+		if(P[j]>maxi)
+		{
+			maxi = P[j];
+			i = j;
+		}
+	}
+	
+	return s.substr((i-1-maxi)/2,maxi);
+}
+
+int main() {
+	// your code goes here
+	ios_base::sync_with_stdio(false);
+	cin.tie(0);
+	string s;
+	cin>>s;
+	
+	s = LongestPalindrome(s);
+	cout<<"Longest Palindrome is "<<s<<" with length "<<s.length()<<endl;;
+	 
+	return 0;
+}
+
+
+**INPUT**
+- abaaba
+
+**OUTPUT**
+Longest Palindrome is abaaba with length 6
+

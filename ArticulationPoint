@@ -12,6 +12,7 @@ class Graph{
 	vector<int> articulationPoints;
 	int time=0;
 	Graph(int ve)
+	{
 	   	 v = ve;
 	   	adj = new vector<int>[ve];
 	   	
